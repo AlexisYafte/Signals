@@ -9,9 +9,6 @@ int main(){
  }else if(status > 0){
  printf("Parent Process ID: %d\n", getpid());
  }
-Figure 5-32. Output of pause system call
-Chapter 5 Process and Signals
-162
  abort();
  printf("Due to abnormal termination this line will not execute.\n");
  return 0;

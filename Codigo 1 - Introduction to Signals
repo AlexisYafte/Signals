@@ -14,8 +14,6 @@ int main () {
  return 0;
 }
 // This function will call when any signal interrupt occurs.
-Chapter 5 Process and Signals
-156
 void CUSTOM_HANDLER(int signum) {
  printf("Caught signal %d, coming out from Program\n", signum);
  exit(1);

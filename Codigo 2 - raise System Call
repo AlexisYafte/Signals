@@ -6,8 +6,6 @@ int main () {
  signal(SIGINT, SIGNAL_HANDLER);
  printf("Raising a new signal\n");
  int status = raise(SIGINT);
-Chapter 5 Process and Signals
-158
  if(status != 0){
  printf("Something went wrong Unable to raise the new signal\n");
  }

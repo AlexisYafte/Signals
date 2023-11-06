@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <pthread.h>
+
+#define NUM_SEATS 100
+int seats[NUM_SEATS];  // 0: disponible, 1: reservado
+
+// Mutex para la sincronización
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+void* reserve_seat(void* client_id) {
+    int client = *(int*)client_id;
+    int seat_to_reserve;
+
+    // Simulación de elección de asiento
+    seat_to_reserve = rand() % NUM_SEATS;
+
+    pthread_mutex_lock(&mutex);
+
+    if (seats[seat_to_reserve] == 0) {
+        seats[seat_to_reserve] = 1;
+        printf("Cliente %d: Reservado el asiento %d\n", client, seat_to_reserve);
+    } else {
+        printf("Cliente %d: El asiento %d está ocupado\n", client, seat_to_reserve);
+    }
+
+    pthread_mutex_unlock(&mutex);
+
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t clients[NUM_SEATS];
+    int client_ids[NUM_SEATS];
+
+    // Inicializa los asientos como disponibles
+    for (int i = 0; i < NUM_SEATS; i++) {
+        seats[i] = 0;
+    }
+
+    // Crea múltiples clientes como hilos
+    for (int i = 0; i < NUM_SEATS; i++) {
+        client_ids[i] = i;
+        pthread_create(&clients[i], NULL, reserve_seat, &client_ids[i]);
+    }
+
+    // Espera a que todos los clientes terminen
+    for (int i = 0; i < NUM_SEATS; i++) {
+        pthread_join(clients[i], NULL);
+    }
+
+    // Liberar recursos y finalizar
+    pthread_mutex_destroy(&mutex);
+
+    return 0;
+}
